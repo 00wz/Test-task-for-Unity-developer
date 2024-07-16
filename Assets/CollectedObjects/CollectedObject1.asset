@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7b439f038c72e469606e09da43da65, type: 3}
+  m_Name: CollectedObject1
+  m_EditorClassIdentifier: 
+  _name: CollectedObject1
+  _sceneView: {fileID: 2829698183834972459, guid: 3e5cc26e6e874c741992cdd5bff71ab4, type: 3}
+  _icon: {fileID: 0}
