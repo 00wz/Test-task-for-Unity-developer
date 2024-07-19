@@ -15,3 +15,4 @@ MonoBehaviour:
   _name: CollectedObject1
   _sceneView: {fileID: 2829698183834972459, guid: 3e5cc26e6e874c741992cdd5bff71ab4, type: 3}
   _icon: {fileID: 21300000, guid: 8a87927aaf7458c49bed784692eac7e1, type: 3}
+  _tooltip: i am red item

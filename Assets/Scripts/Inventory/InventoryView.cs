@@ -12,18 +12,23 @@ public class InventoryView : MonoBehaviour
     private float inventoryHeightPx = 230f;
     [SerializeField]
     private float animDuration = 0.1f;
+    [SerializeField]
+    private Tooltip tooltipPrefab;
 
     private GridLayoutGroup _grid;
     private InventorySlot[] _slots = null;
     private Vector3 _visiblePosition;
     private Vector3 _invisiblePosition;
     public bool IsVisible { get; private set; } = true;
+    private Tooltip _tooltip;
 
     void Awake()
     {
         _grid = GetComponent<GridLayoutGroup>();
         _visiblePosition = transform.position;
         _invisiblePosition = _visiblePosition + Vector3.up * inventoryHeightPx;
+        _tooltip = Instantiate(tooltipPrefab, transform.parent);
+        _tooltip.HideImmediately();
     }
 
     public void Init(int haight, int width)
@@ -36,6 +41,8 @@ public class InventoryView : MonoBehaviour
         for(int i = 0; i < slotsCount; i++)
         {
             _slots[i] = Instantiate(inventorySlotPrefab, transform);
+            //_slots[i]._onPointing += () => _tooltip.Show;
+            //_slots[i]._onUnpointing += _tooltip.Hide;
         }
     }
 
@@ -67,7 +74,14 @@ public class InventoryView : MonoBehaviour
 
     public void SetSlot(int index, CollectedObjectConfig config, Action OnClick)
     {
-        _slots[index].Set(config, OnClick);
+        _slots[index].Set(config, OnClick, 
+            () => _tooltip.Show(config.Tooltip),
+            () => _tooltip.Hide());
+    }
+
+    public void ClearSlot(int index)
+    {
+        _slots[index].Clear();
     }
 
     private void Clean()

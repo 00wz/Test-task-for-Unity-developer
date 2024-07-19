@@ -76,3 +76,4 @@ MonoBehaviour:
   inventorySlotPrefab: {fileID: 109563984042308494, guid: afaa6eb887d417242952849040a5715c, type: 3}
   inventoryHeightPx: 230
   animDuration: 0.1
+  tooltipPrefab: {fileID: 5749554174428599746, guid: 5283a4180ad365242b0509b95e93421d, type: 3}

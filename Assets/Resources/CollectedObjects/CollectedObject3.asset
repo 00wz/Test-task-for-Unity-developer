@@ -15,3 +15,4 @@ MonoBehaviour:
   _name: CollectedObject3
   _sceneView: {fileID: 6541600409267364770, guid: 1946db6a41db3b94486803b57d12cd37, type: 3}
   _icon: {fileID: 21300000, guid: 77c069f95b3437d4ca7dca0033c9521c, type: 3}
+  _tooltip: yiellow blablablabbllbalbalbalblablablabalbalbablabalbalbalbablabalblalabbla
