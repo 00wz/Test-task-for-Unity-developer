@@ -19,7 +19,7 @@ public class InventoryView : MonoBehaviour
     private InventorySlot[] _slots = null;
     private Vector3 _visiblePosition;
     private Vector3 _invisiblePosition;
-    public bool IsVisible { get; private set; } = true;
+    public bool IsVisible { get; private set; } = false;
     private Tooltip _tooltip;
 
     void Awake()
@@ -29,6 +29,7 @@ public class InventoryView : MonoBehaviour
         _invisiblePosition = _visiblePosition + Vector3.up * inventoryHeightPx;
         _tooltip = Instantiate(tooltipPrefab, transform.parent);
         _tooltip.HideImmediately();
+        transform.position = _invisiblePosition;
     }
 
     public void Init(int haight, int width)
