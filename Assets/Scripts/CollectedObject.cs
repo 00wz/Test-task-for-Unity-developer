@@ -3,7 +3,7 @@ using UnityEngine;
 public class CollectedObject : MonoBehaviour
 {
     [SerializeField]
-    private CollectedObjectConfig Config;
+    public CollectedObjectConfig Config;
 
     void Start()
     {

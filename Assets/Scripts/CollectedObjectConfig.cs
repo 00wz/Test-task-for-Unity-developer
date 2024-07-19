@@ -17,6 +17,10 @@ public class CollectedObjectConfig : ScriptableObject
     private Sprite _icon;
     public Sprite Icon => _icon;
 
+    [SerializeField]
+    private string _tooltip;
+    public string Tooltip => _tooltip;
+
     static WeakReference _configsListSoftReference = new WeakReference(null, false);
     /// <summary>
     /// Returns the first found config with name or null in case of failure

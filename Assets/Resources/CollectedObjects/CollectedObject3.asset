@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e7b439f038c72e469606e09da43da65, type: 3}
-  m_Name: CollectedObject2
+  m_Name: CollectedObject3
   m_EditorClassIdentifier: 
-  _name: CollectedObject2
-  _sceneView: {fileID: 8794715504730469371, guid: 80cd1193af45d054f9647a6e6fda909c, type: 3}
-  _icon: {fileID: 21300000, guid: 9ef7a611e951dbc46813161dec6eff6e, type: 3}
+  _name: CollectedObject3
+  _sceneView: {fileID: 6541600409267364770, guid: 1946db6a41db3b94486803b57d12cd37, type: 3}
+  _icon: {fileID: 21300000, guid: 77c069f95b3437d4ca7dca0033c9521c, type: 3}
