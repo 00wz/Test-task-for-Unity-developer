@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using UnityEngine;
@@ -13,8 +14,8 @@ public static class SaveHelper
                 $"object: {typeof(T).ToString()}");
         }
 
-        string json = JsonUtility.ToJson(obj);
-        Debug.Log(json);
+        string json = JsonConvert.SerializeObject(obj);
+
         Directory.CreateDirectory(Application.streamingAssetsPath);
         var path = Path.Combine(Application.streamingAssetsPath, key);
         using (StreamWriter outputFile = new StreamWriter(path))
@@ -32,6 +33,6 @@ public static class SaveHelper
         }
         using StreamReader reader = new(path);
         string json = await reader.ReadToEndAsync();
-        return JsonUtility.FromJson<T>(json);
+        return JsonConvert.DeserializeObject<T>(json);
     }
 }

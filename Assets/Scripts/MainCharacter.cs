@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class MainCharacter : MonoBehaviour
 {
+    [SerializeField]
+    private Transform DropTargetPosition;
+
     public event Func<CollectedObjectConfig, bool> OnCollect;
 
     private void OnTriggerEnter(Collider other)
@@ -15,5 +18,10 @@ public class MainCharacter : MonoBehaviour
                 collectedObject.OnCollect();
             }
         }
+    }
+
+    public void DropCollectedObject(CollectedObjectConfig config)
+    {
+        CollectedObjectFactory.Instantiate(config, DropTargetPosition.position);
     }
 }

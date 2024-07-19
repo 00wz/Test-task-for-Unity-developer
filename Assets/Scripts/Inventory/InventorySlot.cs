@@ -19,7 +19,6 @@ public class InventorySlot : MonoBehaviour,
     private Transform _transform;
     private Image _icon;
     private Sprite _defaultIcon;
-    //public CollectedObjectConfig _config { get; private set; }
 
     private void Awake()
     {
@@ -31,7 +30,6 @@ public class InventorySlot : MonoBehaviour,
 
     public void Clear()
     {
-        //_config = null;
         _icon.sprite = _defaultIcon;
         _onClick = null;
         _onPointing = null;
@@ -41,7 +39,6 @@ public class InventorySlot : MonoBehaviour,
     public void Set(CollectedObjectConfig config, Action onClick,
         Action onPointing, Action onUnpointing)
     {
-        //_config = config;
         _icon.sprite = config.Icon;
         _onClick = onClick;
         _onPointing = onPointing;

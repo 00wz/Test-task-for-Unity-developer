@@ -1,7 +1,5 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory
@@ -14,6 +12,7 @@ public class Inventory
 
     private InventoryView _view;
     private CollectedObjectConfig[] _inventory;
+    public event Action<CollectedObjectConfig> OnDrop;
 
     public Inventory()
     {
@@ -27,15 +26,15 @@ public class Inventory
 
     private async UniTask LoadAndApply()
     {
-        //List<string> collectableObjectsIDs = 
-          StringArrayContainer cont =  
-            await SaveHelper.LoadAsync<StringArrayContainer>(SAVE_KEY);
+        string[] collectableObjectsIDs =  
+            await SaveHelper.LoadAsync<string[]>(SAVE_KEY);
+
         //checking for missing or outdated data
-        if (cont == null)
+        if (collectableObjectsIDs == null)
         {
             return;
         }
-        if(cont.collectableObjectsIDs.Count != INVENTORY_CAPACITY)
+        if(collectableObjectsIDs.Length != INVENTORY_CAPACITY)
         {
             Debug.LogWarning("Inventory: Incorrect loaded data");
             return;
@@ -43,17 +42,18 @@ public class Inventory
 
         for(int i = 0; i < INVENTORY_CAPACITY; i++)
         {
-            if(cont.collectableObjectsIDs[i] == null)
+            if(collectableObjectsIDs[i] == null)
             {
                 CleanSlot(i);
                 continue;
             }
+
             CollectedObjectConfig newCollectedObj = 
-                CollectedObjectConfig.FindConfigByName(cont.collectableObjectsIDs[i]);
+                CollectedObjectConfig.FindConfigByName(collectableObjectsIDs[i]);
             if (newCollectedObj == null)
             {
                 Debug.LogWarning($"Inventory: Missing config " +
-                    $"by name: {cont.collectableObjectsIDs[i]}");
+                    $"by name: {collectableObjectsIDs[i]}");
                 CleanSlot(i);
                 continue;
             }
@@ -61,29 +61,17 @@ public class Inventory
         }
     }
 
-    [Serializable]
-    private class StringArrayContainer
-    {
-        public List<string> collectableObjectsIDs;
-    }
-
     private async UniTask Save()
     {
-        StringArrayContainer cont = new();
-        //List<string> collectableObjectsIDs
-         cont.collectableObjectsIDs = new List<string>(INVENTORY_CAPACITY);
+        string[] collectableObjectsIDs = new string[INVENTORY_CAPACITY];
         for (int i = 0; i < INVENTORY_CAPACITY; i++)
         {
             if (_inventory[i] != null)
             {
-                cont.collectableObjectsIDs.Add(_inventory[i].Name);
-            }
-            else
-            {
-                cont.collectableObjectsIDs.Add(null);
+                collectableObjectsIDs[i] = (_inventory[i].Name);
             }
         }
-        await SaveHelper.SaveAsync(cont, SAVE_KEY);
+        await SaveHelper.SaveAsync(collectableObjectsIDs, SAVE_KEY);
     }
 
     private void CleanSlot(int index)
@@ -95,7 +83,14 @@ public class Inventory
     private void SetSlot(int index, CollectedObjectConfig config)
     {
         _inventory[index] = config;
-        _view.SetSlot(index, config, null);
+        _view.SetSlot(index, config, () => Drop(index));
+    }
+
+    private void Drop(int index)
+    {
+        OnDrop?.Invoke(_inventory[index]);
+        CleanSlot(index);
+        Save();
     }
 
     public bool TryAdd(CollectedObjectConfig config)

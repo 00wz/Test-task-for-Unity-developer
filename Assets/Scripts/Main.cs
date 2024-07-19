@@ -21,5 +21,6 @@ public class Main : MonoBehaviour
     {
         _inventory = new Inventory();
         Character.OnCollect += _inventory.TryAdd;
+        _inventory.OnDrop += Character.DropCollectedObject;
     }
 }
