@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -10,11 +12,13 @@ public class InputMove : MonoBehaviour
     readonly private float DIAGONAL_COEFFICIENT = 1 / Mathf.Sqrt(2f);
     private Vector3 CAMERA_RIGHT;
     private Vector3 CAMERA_FORWARD;
+    private CancellationTokenSource _tokenSource = new();
 
     void Start()
     {
         InitMoveDirections();
         _controller = GetComponent<CharacterController>();
+        UpdateAsync(_tokenSource.Token);
     }
 
     /// <summary>
@@ -28,23 +32,33 @@ public class InputMove : MonoBehaviour
         CAMERA_FORWARD = cameraRotateY * Vector3.forward;
     }
 
-    void Update()
+    private async UniTask UpdateAsync(CancellationToken cancellationToken)
     {
-        Vector3 direction = Input.GetAxis("Horizontal") * CAMERA_RIGHT +
-                Input.GetAxis("Vertical") * CAMERA_FORWARD;
-
-        float directionSqrLength = direction.sqrMagnitude;
-
-        //input check
-        if (directionSqrLength > 0.001f)
+        while(!cancellationToken.IsCancellationRequested)
         {
-            //correction of diagonally accelerated movement
-            //more efficient than Vector3.normalized
-            if (directionSqrLength > 1.5f)
+            Vector3 direction = Input.GetAxis("Horizontal") * CAMERA_RIGHT +
+        Input.GetAxis("Vertical") * CAMERA_FORWARD;
+
+            float directionSqrLength = direction.sqrMagnitude;
+
+            //input check
+            if (directionSqrLength > 0.001f)
             {
-                direction *= DIAGONAL_COEFFICIENT;
+                //correction of diagonally accelerated movement
+                //more efficient than Vector3.normalized
+                if (directionSqrLength > 1.5f)
+                {
+                    direction *= DIAGONAL_COEFFICIENT;
+                }
+                _controller.Move(direction * Time.deltaTime * _moveSpeed);
             }
-            _controller.Move(direction * Time.deltaTime * _moveSpeed);
+
+            await UniTask.Yield(cancellationToken);
         }
+    }
+
+    private void OnDestroy()
+    {
+        _tokenSource.Cancel();
     }
 }

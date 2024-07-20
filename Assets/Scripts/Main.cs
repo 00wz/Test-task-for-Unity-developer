@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 public class Main : MonoBehaviour
@@ -6,14 +8,20 @@ public class Main : MonoBehaviour
     private MainCharacter Character;
 
     private Inventory _inventory;
-    
-    void Update()
+    private CancellationTokenSource _tokenSource = new();
+
+    private async UniTask UpdateAsync(CancellationToken cancellationToken)
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        while(!cancellationToken.IsCancellationRequested)
         {
-            //Debug.Log(typeof(string[,]).IsSerializable);
-            //CollectedObjectConfig.FindConfigByName(" ");
-            _inventory.ToggleViewVisibility();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                //Debug.Log(typeof(string[,]).IsSerializable);
+                //CollectedObjectConfig.FindConfigByName(" ");
+                _inventory.ToggleViewVisibility();
+            }
+
+            await UniTask.Yield(cancellationToken);
         }
     }
 
@@ -22,5 +30,11 @@ public class Main : MonoBehaviour
         _inventory = new Inventory();
         Character.OnCollect += _inventory.TryAdd;
         _inventory.OnDrop += Character.DropCollectedObject;
+        UpdateAsync(_tokenSource.Token);
+    }
+
+    private void OnDestroy()
+    {
+        _tokenSource.Cancel();
     }
 }
